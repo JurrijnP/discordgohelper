@@ -60,8 +60,8 @@ func GetPermissionBasedOnString(arg string) int {
         return discordgo.PermissionVoiceUseVAD
     case "use_voice_activity":
         return discordgo.PermissionVoiceUseVAD
-    //case "priority_speaker":
-        //return discordgo.PermissionVoicePrioritySpeaker
+    case "priority_speaker":
+        return discordgo.PermissionVoicePrioritySpeaker
     case "change_nickname":
         return discordgo.PermissionChangeNickname
     case "manage_nicknames":
