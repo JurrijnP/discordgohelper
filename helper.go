@@ -1,5 +1,5 @@
 package dgohelper
 
 import (
-    "github.com/bwmarrin/discordgo"
+    //"github.com/bwmarrin/discordgo"
 )
