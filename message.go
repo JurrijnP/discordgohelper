@@ -29,7 +29,7 @@ func GetAllChannelMention(s *discordgo.Session, msg string) (cm []string) {
                 return mention
             }
 
-            return channel.Name
+            return channel.ID
         })
     }
     return cm
