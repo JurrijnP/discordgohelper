@@ -10,6 +10,7 @@ import (
 var (
     patternChannels        = regexp.MustCompile("<#[^>]*>")
     patternMentions        = regexp.MustCompile("<(@|!@)[^>]*>")
+    patternSnowflake       = regexp.MustCompile("[0-9]{16,18}")
     patternChannelMentions = regexp.MustCompile("<@&[^>]*>")
 )
 
@@ -24,29 +25,34 @@ func ContentWithMentionsRemoved(m *discordgo.Message) (content string) {
     return strings.TrimSpace(content)
 }
 
-func GetUserIDs(s *discordgo.Session, msg string) (uids []string) {
-    return uids
-}
-
-func GetChannelMention(s *discordgo.Session, msg string) (cm string) {
-    if len(GetAllChannelMention(s, msg)) > 0 {
-        return GetAllChannelMention(s, msg)[0]
+func GetMembersFromContent(s *discordgo.Session, guildid, msg string) (ms []*discordgo.Member) {
+    uids := patternSnowflake.FindAllString(msg, -1)
+    for ui := range uids {
+        if m, err := s.State.Member(guildid, uids[ui]); err == nil {
+            ms = append(ms, m)
+        }
     }
-    return msg
+    return ms
 }
 
-func GetAllChannelMention(s *discordgo.Session, msg string) (cm []string) {
-    cm = patternChannels.FindAllString(msg, -1)
-    
-    for cmi := range cm {
-        cm[cmi] = patternChannels.ReplaceAllStringFunc(cm[cmi], func(mention string) string {
-            channel, err := s.State.Channel(mention[2 : len(mention)-1])
-            if err != nil || channel.Type == discordgo.ChannelTypeGuildVoice {
-                return mention
+func GetChannelMention(s *discordgo.Session, msg, channelid string) *discordgo.Channel {
+    if len(GetChannelMentions(s, msg)) > 0 {
+        for _, ci := range GetChannelMentions(s, msg) {
+            if ci.ID == channelid {
+                return ci
             }
+        }
+    }
+    return nil
+}
 
-            return channel.ID
-        })
+func GetChannelMentions(s *discordgo.Session, msg string) (cm []*discordgo.Channel) {
+    cms := patternChannels.FindAllString(msg, -1)
+    
+    for cmi := range cms {
+        if c, err := s.State.Channel(cms[cmi]); err == nil {
+            cm = append(cm, c)
+        }
     }
     return cm
 }
