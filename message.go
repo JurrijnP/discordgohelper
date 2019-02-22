@@ -2,15 +2,31 @@ package dgohelper
 
 import (
     "regexp"
+    "strings"
     
     "github.com/bwmarrin/discordgo"
 )
 
 var (
     patternChannels        = regexp.MustCompile("<#[^>]*>")
-    patternMentions        = regexp.MustCompile("<@[^>]*>")
+    patternMentions        = regexp.MustCompile("<(@|!@)[^>]*>")
     patternChannelMentions = regexp.MustCompile("<@&[^>]*>")
 )
+
+func ContentWithMentionsRemoved(m *discordgo.Message) (content string) {
+    content = m.Content
+    
+    for _, user := range m.Mentions {
+        content = strings.Replace(content, "<@"+user.ID+">", "", -1)
+        content = strings.Replace(content, "<@!"+user.ID+">", "", -1)
+    }
+    
+    return strings.TrimSpace(content)
+}
+
+func GetUserIDs(s *discordgo.Session, msg string) (uids []string) {
+    return uids
+}
 
 func GetChannelMention(s *discordgo.Session, msg string) (cm string) {
     if len(GetAllChannelMention(s, msg)) > 0 {

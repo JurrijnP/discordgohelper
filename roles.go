@@ -6,20 +6,22 @@ import (
     "github.com/bwmarrin/discordgo"
 )
 
-func GetRoleIDByName(Roles []*discordgo.Role, RoleName string) (id string) {
+func GetRoleByName(Roles []*discordgo.Role, RoleName string) (r *discordgo.Role) {
     for ri := range Roles {
         if strings.ToLower(Roles[ri].Name) == strings.ToLower(RoleName) {
-            return Roles[ri].ID
+            return Roles[ri]
         }
     }
-    return ""
+    return nil
 }
 
-func GetRoleNameByID(Roles []*discordgo.Role, RoleID string) (id string) {
+func GetHighestRole(Roles []*discordgo.Role, UserRoles []string) (hp int) {
     for ri := range Roles {
-        if Roles[ri].ID == RoleID {
-            return Roles[ri].Name
+        for uri := range UserRoles {
+            if Roles[ri].ID == UserRoles[uri] && Roles[ri].Position > hp {
+                hp = Roles[ri].Position
+            }
         }
     }
-    return ""
+    return hp
 }
