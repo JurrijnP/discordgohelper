@@ -6,6 +6,8 @@ import (
     "github.com/bwmarrin/discordgo"
 )
 
+// GetPermissionBasedOnString returns an integer from a permission based on a string.
+// arg   : The a permission name.
 func GetPermissionBasedOnString(arg string) int {
     switch strings.ToLower(strings.Replace(arg, " ", "_", -1)) {
     case "create_instant_invite":
@@ -94,6 +96,10 @@ func GetPermissionBasedOnString(arg string) int {
     return 0
 }
 
+// GetPermissionBasedOnString returns a name from a permission based on a integer.
+// perm   : Integer of the permission.
+// mode   : Determines the string to return in some cases.
+//          (e.g. Manage Roles <> Manage Permissions)
 func GetPermissionAsString(perm, mode int) string {
     switch perm {
     case discordgo.PermissionCreateInstantInvite:
@@ -164,6 +170,8 @@ func GetPermissionAsString(perm, mode int) string {
     return ""
 }
 
+// GetPermissionsFromSlice returns an integer consisting of (multiple) permissions based on a slice of strings.
+// perms   : Slice of strings of permission names.
 func GetPermissionsFromSlice(perms []string) (apermissions int) {
     for pi := range perms {
         switch strings.ToLower(strings.Replace(perms[pi], " ", "_", -1)) {
@@ -254,6 +262,10 @@ func GetPermissionsFromSlice(perms []string) (apermissions int) {
     return apermissions
 }
 
+// GetPermissionsFromSlice returns a slice of strings based on an integer consisting of (multiple) permissions.
+// perms   : Slice of strings of permission names.
+// mode    : Determines the string to return in some cases.
+//           (e.g. Manage Roles <> Manage Permissions)
 func GetAllPermissionsFromBit(perms, mode int) (apermissions []string) {
     for i, j := 0, 0; j < perms; i, j = i+1, j << uint(i) {
         if perms&j != 0 {
