@@ -26,7 +26,7 @@ func GetPermissionBasedOnString(arg string) int {
         return discordgo.PermissionManageServer
     case "add_reactions":
         return discordgo.PermissionAddReactions
-    case "view_audit_log":
+    case "view_audit_logs":
         return discordgo.PermissionViewAuditLogs
     case "view_channel":
         return discordgo.PermissionReadMessages
@@ -191,7 +191,7 @@ func GetPermissionsFromSlice(perms []string) (apermissions int) {
             apermissions |= discordgo.PermissionManageServer
         case "add_reactions":
             apermissions |= discordgo.PermissionAddReactions
-        case "view_audit_log":
+        case "view_audit_logs":
             apermissions |= discordgo.PermissionViewAuditLogs
         case "view_channel":
             apermissions |= discordgo.PermissionReadMessages
@@ -267,9 +267,9 @@ func GetPermissionsFromSlice(perms []string) (apermissions int) {
 // mode    : Determines the string to return in some cases.
 //           (e.g. Manage Roles <> Manage Permissions)
 func GetAllPermissionsFromBit(perms, mode int) (apermissions []string) {
-    for i, j := 0, 0; j < perms; i, j = i+1, j << uint(i) {
-        if perms&j != 0 {
-            switch j {
+    for i := 0; 1<<uint(i) < perms; i++ {
+        if perms&(1<<uint(i)) != 0 {
+            switch 1<<uint(i) {
             case discordgo.PermissionCreateInstantInvite:
                 apermissions = append(apermissions, "Create Instant Invite")
             case discordgo.PermissionKickMembers:

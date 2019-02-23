@@ -8,7 +8,7 @@ import (
 )
 
 var (
-    patternChannels        = regexp.MustCompile("<#[^>]*>")
+    patternChannels        = regexp.MustCompile("<#([^>]*)>")
     patternMentions        = regexp.MustCompile("<(@|!@)[^>]*>")
     patternSnowflake       = regexp.MustCompile("[0-9]{16,18}")
     patternChannelMentions = regexp.MustCompile("<@&[^>]*>")
@@ -66,7 +66,7 @@ func GetChannelMentions(s *discordgo.Session, msg string) (cm []*discordgo.Chann
     cms := patternChannels.FindAllString(msg, -1)
     
     for cmi := range cms {
-        if c, err := s.State.Channel(cms[cmi]); err == nil {
+        if c, err := s.State.Channel(patternChannels.ReplaceAllString(cms[cmi], "$1")); err == nil {
             cm = append(cm, c)
         }
     }
