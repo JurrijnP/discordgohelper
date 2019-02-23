@@ -26,3 +26,16 @@ func MemberHasPermission(guildRoles []*discordgo.Role, member *discordgo.Member,
     
     return false
 }
+
+// MemberHasRole checks if a user has a role.
+// userRoles   : Slice of role IDs.
+// roleID      : ID of the role you want to check.
+func MemberHasRole(userRoles []string, roleID string) bool {
+    for uri := range userRoles {
+        if userRoles[uri] == roleID {
+            return true
+        }
+    }
+    
+    return false
+}

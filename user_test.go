@@ -26,3 +26,15 @@ func TestMemberHasPermission(t *testing.T) {
         t.Error(result)
     }
 }
+
+func TestMemberHasRole(t *testing.T) {
+    userRoles := []string{"role1", "role2", "role3"}
+    
+    if result := MemberHasRole(userRoles, "role2"); !result {
+        t.Error(result)
+    }
+    
+    if result := MemberHasRole(userRoles, "role4"); result {
+        t.Error(result)
+    }
+}
