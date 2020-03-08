@@ -12,15 +12,15 @@ import (
 // perm         : Permission(s) you want to check.
 func MemberHasPermission(guildRoles []*discordgo.Role, member *discordgo.Member, perm int) bool {
     var perms int
-    for _, gr := range guildRoles {
-        for _, r := range member.Roles {
-            if gr.ID == r {
-                perms |= gr.Permissions
+    for gri := range guildRoles {
+        for mri := range member.Roles {
+            if guildRoles[gri].ID == member.Roles[mri] {
+                perms |= guildRoles[gri].Permissions
             }
         }
     }
     
-    if perms&perm == perm {
+    if perms & perm == perm {
         return true
     }
     
